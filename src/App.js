@@ -6,15 +6,27 @@
 
 // State hook u import edin
 import React from "react";
+import { useState } from "react";
 
 // Gönderiler (çoğul!) ve AramaÇubuğu bileşenlerini import edin, çünkü bunlar App bileşeni içinde kullanılacak
 // sahteVeri'yi import edin
+import sahteVeri from "./sahte-veri.js";
 import "./App.css";
+import AramaCubugu from "./bilesenler/AramaCubugu/AramaCubugu.js";
+import Gonderiler from "./bilesenler/Gonderiler/Gonderiler.js";
 
 const App = () => {
   // Gönderi nesneleri dizisini tutmak için "gonderiler" adlı bir state oluşturun, **sahteVeri'yi yükleyin**.
   // Artık sahteVeri'ye ihtiyacınız olmayacak.
   // Arama çubuğunun çalışması için , arama kriterini tutacak başka bir state'e ihtiyacımız olacak.
+
+  const [gonderiler, setGonderiler] = useState(sahteVeri);
+  const [kullanicilar, setKullanicilar] = useState(
+    gonderiler
+      .filter((obj) => obj.hasOwnProperty("username"))
+      .map((obj) => obj.username)
+  );
+  const [searchState, setSearchState] = useState("");
 
   const gonderiyiBegen = (gonderiID) => {
     /*
@@ -30,12 +42,29 @@ const App = () => {
      */
   };
 
+  const changeHandler = (value) => {
+    if (value === "") {
+      setSearchState(value);
+      setGonderiler(sahteVeri);
+    } else {
+      setSearchState(value);
+      const filteredValue = sahteVeri.filter((g) =>
+        g.username.includes(searchState)
+      );
+      if(filteredValue.length>0){
+        setGonderiler(filteredValue);
+      } 
+    }
+  };
+
   return (
     <div className="App">
-      App Çalışıyor
-      {/* Yukarıdaki metni projeye başladığınızda silin*/}
-      {/* AramaÇubuğu ve Gönderiler'i render etmesi için buraya ekleyin */}
-      {/* Her bileşenin hangi proplara ihtiyaç duyduğunu kontrol edin, eğer ihtiyaç varsa ekleyin! */}
+      <AramaCubugu
+        searchState={searchState}
+        setSearchState={setSearchState}
+        changeHandler={changeHandler}
+      />
+      <Gonderiler gonderiler={gonderiler} gonderiyiBegen={gonderiyiBegen} />
     </div>
   );
 };

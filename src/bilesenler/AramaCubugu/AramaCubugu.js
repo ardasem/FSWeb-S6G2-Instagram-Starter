@@ -8,15 +8,19 @@ import {
   faCompass,
 } from "@fortawesome/free-regular-svg-icons";
 import "./AramaCubugu.css";
+import { useState } from "react";
 
 const AramaCubugu = (props) => {
+  const { changeHandler } = props;
+
+
   return (
     <div className="search-bar-wrapper">
       <div className="social">
         <FontAwesomeIcon icon={faInstagram} />
       </div>
       <form className="search-form">
-        <input type="text" placeholder="Arama" />
+        <input type="text" placeholder="Arama" onChange={(e)=>changeHandler(e.target.value)} />
       </form>
       <div className="social-wrapper">
         <div className="social">
